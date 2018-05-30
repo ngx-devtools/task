@@ -17,9 +17,9 @@
   },
   "homepage": "https://github.com/ngx-devtools/task#readme",
   "dependencies": {
-    "@ngx-devtools/build": "latest",
-    "@ngx-devtools/common": "latest",
-    "@ngx-devtools/server": "latest",
+    "@ngx-devtools/build": "1.7.0",
+    "@ngx-devtools/common": "1.7.0",
+    "@ngx-devtools/server": "1.7.0",
     "@types/gulp": "4.0.5",
     "@types/node": "10.0.8",
     "@types/systemjs": "0.20.6",
