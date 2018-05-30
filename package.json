@@ -1,0 +1,28 @@
+{
+  "name": "@ngx-devtools/task",
+  "version": "1.7.0",
+  "description": "NGX devtools Common task",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ngx-devtools/task.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ngx-devtools/task/issues"
+  },
+  "homepage": "https://github.com/ngx-devtools/task#readme",
+  "dependencies": {
+    "@ngx-devtools/build": "latest",
+    "@ngx-devtools/common": "latest",
+    "@ngx-devtools/server": "latest",
+    "@types/gulp": "4.0.5",
+    "@types/node": "10.0.8",
+    "@types/systemjs": "0.20.6",
+    "gulp": "4.0.0"
+  }
+}
