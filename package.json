@@ -1,6 +1,6 @@
 {
   "name": "@ngx-devtools/task",
-  "version": "1.8.0",
+  "version": "1.9.0",
   "description": "NGX devtools Common task",
   "main": "index.js",
   "scripts": {
@@ -17,12 +17,15 @@
   },
   "homepage": "https://github.com/ngx-devtools/task#readme",
   "dependencies": {
-    "@ngx-devtools/build": "1.8.0",
-    "@ngx-devtools/common": "1.8.0",
-    "@ngx-devtools/server": "1.8.0",
+    "@ngx-devtools/build": "1.9.0",
+    "@ngx-devtools/server": "1.9.0",
     "@types/gulp": "4.0.5",
     "@types/node": "10.3.2",
     "@types/systemjs": "0.20.6",
     "gulp": "4.0.0"
+  },
+  "devDependencies": {
+    "@angular/compiler": "6.0.6",
+    "@angular/compiler-cli": "6.0.6"
   }
 }
