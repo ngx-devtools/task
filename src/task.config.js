@@ -1,9 +1,11 @@
 
 const { copy, clean, watcher, devtools } = require('@ngx-devtools/common');
+
 const { build, onClientFileChanged, vendorBundle } = require('@ngx-devtools/build');
 const { serverStart } = require('@ngx-devtools/server');
 
 const { getTasks } = require('./get-tasks');
+const { symlink } = require('./symlink');
 
 let _tasks = [];
 
@@ -23,6 +25,10 @@ class TaskConfig {
 
   tasks() {
     return Promise.all(_tasks.map(task => console.log(`- ${task}`)));
+  }
+
+  linkDist() {
+    return symlink();
   }
 
   build() { 
