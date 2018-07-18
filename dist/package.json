@@ -2,10 +2,7 @@
   "name": "@ngx-devtools/task",
   "version": "1.10.0",
   "description": "NGX devtools Common task",
-  "main": "dist/task.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
+  "main": "task.js",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/ngx-devtools/task.git"
@@ -24,9 +21,7 @@
     "@types/systemjs": "0.20.6",
     "gulp": "4.0.0"
   },
-  "devDependencies": {
-    "@angular/compiler": "6.0.9",
-    "@angular/compiler-cli": "6.0.9"
-  },
-  "typings": "dist/task.d.ts"
+  "typings": "task.d.ts",
+  "module": "./esm2015/task.js",
+  "esm2015": "./esm2015/task.js"
 }
