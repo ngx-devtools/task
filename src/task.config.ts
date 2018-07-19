@@ -4,9 +4,11 @@ import { join } from 'path';
 import { clean, watcher, copyFiles } from '@ngx-devtools/common';
 import { serverStart } from '@ngx-devtools/server';
 import { onClientFileChanged, vendorBundle } from '@ngx-devtools/build';
-import { build } from './build';
 
-import { getTasks, toCamelCase } from 'task-list';
+import { build } from './build';
+import SymLink from './symlink';
+
+import { getTasks, toCamelCase } from './task-list';
 
 const devtoolsPath = join(process.env.APP_ROOT_PATH, '.devtools.json');
 const devtools = (existsSync(devtoolsPath)) ? require(devtoolsPath): {}; 
@@ -43,6 +45,10 @@ export class TaskConfig {
 
   cleanTmp() {
     return clean('.tmp');
+  }
+
+  symlink() {
+    return SymLink.symlink('dist');
   }
 
   build() {

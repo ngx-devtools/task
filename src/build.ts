@@ -5,7 +5,6 @@ import { join } from 'path';
 const prodModeParams = [ '--prod',  '--prod=true',  '--prod true'  ];
 
 const argv = require('yargs')
-  .option('pkg', { default: null, type: 'string' })
   .option('elements', { default: null, type: 'string' })
   .argv;
 
