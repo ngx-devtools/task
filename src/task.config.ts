@@ -3,7 +3,7 @@ import { join } from 'path';
 
 import { clean, watcher, copyFiles } from '@ngx-devtools/common';
 import { serverStart } from '@ngx-devtools/server';
-import { onClientFileChanged } from '@ngx-devtools/build';
+import { onClientFileChanged, vendorBundle } from '@ngx-devtools/build';
 import { build } from './build';
 
 import { getTasks, toCamelCase } from 'task-list';
@@ -45,9 +45,16 @@ export class TaskConfig {
     return clean('.tmp');
   }
 
+  build() {
+    return build();
+  }
+
+  vendorBundle() {
+    return vendorBundle('node_modules/.tmp');
+  }
+
   default() {
-    return Promise.all([ this.cleanDist(), this.cleanTmp()  ])
-      .then(() => Promise.all([ this.copyFiles(), build() ]))
+    return Promise.all([ this.copyFiles(), build()  ])
       .then(() => Promise.all([ serverStart(), watcher({ onClientFileChanged }) ]))
   }
 

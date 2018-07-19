@@ -4,6 +4,7 @@
   "description": "NGX devtools Common task",
   "main": "dist/task.js",
   "scripts": {
+    "build": "node build",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
