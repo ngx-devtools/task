@@ -1,5 +1,5 @@
 import { isProcess } from '@ngx-devtools/common';
-import { buildDevAll, buildDevElements } from '@ngx-devtools/build';
+import { buildDevAll, buildDevElements, buildProdElements } from '@ngx-devtools/build';
 import { join } from 'path';
 
 const prodModeParams = [ '--prod',  '--prod=true',  '--prod true'  ];
@@ -20,8 +20,16 @@ async function buildDevTask(){
   return (argv.elements !== null) ? buildDevElementsArgv(): buildDevAll()
 }
 
+async function buildProdTask(){
+  return (argv.elements !== null) 
+    ? (argv.elements)
+      ? buildProdElements({ src: ELEMENTS_PATH, packages: argv.elements.split('.')  })
+      : buildProdElements({ src: ELEMENTS_PATH })
+    : Promise.resolve()
+}
+
 async function build() {
-  return (isProcess(prodModeParams)) ? Promise.resolve(): buildDevTask()
+  return (isProcess(prodModeParams)) ? buildProdTask(): buildDevTask();
 }
 
 export { build }

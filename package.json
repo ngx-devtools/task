@@ -1,6 +1,6 @@
 {
   "name": "@ngx-devtools/task",
-  "version": "1.10.0",
+  "version": "2.0.0-beta.0",
   "description": "NGX devtools Common task",
   "main": "dist/task.js",
   "scripts": {
@@ -18,7 +18,7 @@
   },
   "homepage": "https://github.com/ngx-devtools/task#readme",
   "dependencies": {
-    "@ngx-devtools/build": "latest",
+    "@ngx-devtools/build": "beta",
     "@ngx-devtools/server": "latest",
     "@types/gulp": "4.0.5",
     "@types/node": "10.5.2",
