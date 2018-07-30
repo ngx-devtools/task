@@ -1,17 +1,21 @@
 import { existsSync } from 'fs';
-import { join } from 'path';
+import { join, resolve } from 'path';
 
-import { clean, watcher, copyFiles } from '@ngx-devtools/common';
+import { clean, watcher } from '@ngx-devtools/common';
 import { serverStart } from '@ngx-devtools/server';
 import { onClientFileChanged, vendorBundle } from '@ngx-devtools/build';
 
-import { build } from './build';
+import { build, copyAssets } from './build';
 import SymLink from './symlink';
 
 import { getTasks, toCamelCase } from './task-list';
 
 const devtoolsPath = join(process.env.APP_ROOT_PATH, '.devtools.json');
 const devtools = (existsSync(devtoolsPath)) ? require(devtoolsPath): {}; 
+
+if (!(process.env.APP_ROOT_PATH)) {
+  process.env.APP_ROOT_PATH = resolve();
+}
 
 export class TaskConfig {
 
@@ -29,14 +33,6 @@ export class TaskConfig {
         return obj[toCamelCase(task)]();
       });
     }
-  }
-
-  copyFiles() {
-    const configs = (devtools && devtools['tasks'] && devtools.tasks['copy.files'] ? devtools.tasks['copy.files'] : []);
-    const srcConfigs = [{ src: 'src/*.html', dest: 'dist' }].concat(configs);
-    return Promise.all(srcConfigs.map(config => {
-      return copyFiles(config.src, config.dest);
-    }));
   }
 
   cleanDist() {
@@ -60,7 +56,7 @@ export class TaskConfig {
   }
 
   default() {
-    return Promise.all([ this.copyFiles(), build()  ])
+    return Promise.all([ copyAssets(), build()  ])
       .then(() => Promise.all([ serverStart(), watcher({ onClientFileChanged }) ]))
   }
 

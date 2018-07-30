@@ -1,6 +1,6 @@
-import { isProcess } from '@ngx-devtools/common';
+import { isProcess, copyFileAsync, globFiles, mkdirp } from '@ngx-devtools/common';
 import { buildDevAll, buildDevElements, buildProdElements } from '@ngx-devtools/build';
-import { join } from 'path';
+import { join, dirname,  } from 'path';
 
 const prodModeParams = [ '--prod',  '--prod=true',  '--prod true'  ];
 
@@ -12,6 +12,15 @@ const argv = require('yargs')
   .argv;
 
 const ELEMENTS_PATH = join('src', 'elements');
+
+async function copyAssets() {
+  const files = await globFiles(['src/assets/**/*', 'src/index.html']);
+  return Promise.all(files.map(file => {
+    const destPath = file.replace('src', 'dist');
+    mkdirp(dirname(destPath));
+    return copyFileAsync(file, destPath);
+  }));
+}
 
 async function buildTask(){
   return (argv.prodElements !== null) 
@@ -30,11 +39,11 @@ async function buildProdTask(){
     ? (argv.elements) 
       ? buildProdElements({ src: ELEMENTS_PATH, packages: argv.elements.split('.')  })
       : buildProdElements({ src: ELEMENTS_PATH })
-    : Promise.resolve()
+    : Promise.all([ copyAssets(), buildProdElements({ src: ELEMENTS_PATH }) ])
 }
 
 async function build() {
   return (isProcess(prodModeParams)) ? buildProdTask(): buildTask();
 }
 
-export { build }
+export { build, copyAssets }
