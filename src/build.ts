@@ -1,5 +1,5 @@
 import { isProcess, copyFileAsync, globFiles, mkdirp, clean, injectHtml } from '@ngx-devtools/common';
-import { buildDevAll, buildDevElements, buildProdElements } from '@ngx-devtools/build';
+import { buildDevAll, buildDevElements, buildProdElements, buildProdLibs, buildProdApp } from '@ngx-devtools/build';
 import { join, dirname,  } from 'path';
 import { existsSync } from 'fs';
 
@@ -13,6 +13,8 @@ const argv = require('yargs')
   .argv;
 
 const ELEMENTS_PATH = join('src', 'elements');
+const LIBS_PATH = join('src', 'libs');
+const HTML_PATH = join('dist', 'index.html');
 
 async function copyAssets() {
   const ASSETS_PATH = 'src/assets', INDEX_HTML_PATH = 'src/index.html';
@@ -39,8 +41,10 @@ async function buildTask(){
 async function buildProdTaskAll(){
   return Promise.all([ clean('dist'), clean('.tmp') ]).then(() => {
     return Promise.all([ 
-      copyAssets().then(() => injectHtml('dist/index.html')), 
-      buildProdElements({ src: ELEMENTS_PATH }) 
+      copyAssets().then(() => injectHtml(HTML_PATH)), 
+      buildProdLibs(LIBS_PATH),
+      buildProdApp(),
+      buildProdElements({ src: ELEMENTS_PATH })
     ]);
   })
 }
