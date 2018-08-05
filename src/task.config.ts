@@ -1,17 +1,13 @@
-import { existsSync } from 'fs';
-import { join, resolve } from 'path';
+import { resolve } from 'path';
 
 import { clean, watcher } from '@ngx-devtools/common';
-import { serverStart } from '@ngx-devtools/server';
+import { Server } from '@ngx-devtools/server';
 import { onClientFileChanged, vendorBundle } from '@ngx-devtools/build';
 
 import { build, copyAssets } from './build';
 import SymLink from './symlink';
 
 import { getTasks, toCamelCase } from './task-list';
-
-const devtoolsPath = join(process.env.APP_ROOT_PATH, '.devtools.json');
-const devtools = (existsSync(devtoolsPath)) ? require(devtoolsPath): {}; 
 
 if (!(process.env.APP_ROOT_PATH)) {
   process.env.APP_ROOT_PATH = resolve();
@@ -55,9 +51,14 @@ export class TaskConfig {
     return vendorBundle('node_modules/.tmp');
   }
 
+  postInstall(){
+    return Promise.all([ this.build(), vendorBundle() ])
+  }
+
   default() {
-    return Promise.all([ copyAssets(), build()  ])
-      .then(() => Promise.all([ serverStart(), watcher({ onClientFileChanged }) ]))
+    return Promise.all([ copyAssets(), build()  ]).then(() => {
+      return Promise.all([ Server.start(), watcher({ onClientFileChanged }) ]) 
+    })
   }
 
 }

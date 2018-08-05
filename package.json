@@ -1,6 +1,6 @@
 {
   "name": "@ngx-devtools/task",
-  "version": "2.0.0-beta.7",
+  "version": "2.0.0-beta.8",
   "description": "NGX devtools Common task",
   "main": "dist/task.js",
   "scripts": {
@@ -19,15 +19,15 @@
   "homepage": "https://github.com/ngx-devtools/task#readme",
   "dependencies": {
     "@ngx-devtools/build": "beta",
-    "@ngx-devtools/server": "latest",
+    "@ngx-devtools/server": "beta",
     "@types/gulp": "4.0.5",
     "@types/node": "10.5.5",
     "@types/systemjs": "0.20.6",
     "gulp": "4.0.0"
   },
   "devDependencies": {
-    "@angular/compiler": "6.1.0",
-    "@angular/compiler-cli": "6.1.0"
+    "@angular/compiler": "6.1.1",
+    "@angular/compiler-cli": "6.1.1"
   },
   "typings": "dist/task.d.ts"
 }
