@@ -52,7 +52,7 @@ export class TaskConfig {
   }
 
   postInstall(){
-    return Promise.all([ this.build(), vendorBundle() ])
+    return Promise.all([ build(), vendorBundle('node_modules/.tmp') ])
   }
 
   default() {
