@@ -56,7 +56,7 @@ export class TaskConfig {
   }
 
   default() {
-    return Promise.all([ copyAssets(), build()  ]).then(() => {
+    return Promise.all([ copyAssets(), build() ]).then(() => {
       return Promise.all([ DevServer.start(), watcher({ onClientFileChanged }) ]) 
     })
   }
