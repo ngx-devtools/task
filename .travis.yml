@@ -17,7 +17,6 @@ install:
 
 script:
   - npm run build
-  - echo $TRAVIS_TAG
 
 before_deploy: 
   - |
@@ -29,6 +28,7 @@ before_deploy:
       fi
     }
   - cd dist
+  - ls -al
 
 deploy:
   provider: npm
@@ -42,7 +42,7 @@ deploy:
     tags: false
     repo: ngx-devtools/task
 
-after_deploy: |
-  if [ "$(npm_dist_tag)" == "beta" ]; then
-    echo "Hey"
-  fi
+notifications:
+  email:
+    on_failure: change
+    on_success: never
