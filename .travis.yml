@@ -17,3 +17,6 @@ install:
 
 script:
   - npm run build
+
+after_success:
+  - ls -a dist
