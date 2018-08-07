@@ -19,5 +19,12 @@ script:
   - npm run build
 
 after_success:
-  - echo "$TRAVIS_TAG"
-
+  - | 
+    function npm_dist_tag() {
+      if [[ "$TRAVIS_TAG" = *"-beta.x"* ]]; then
+        echo "next"
+      else
+        echo "latest"
+      fi
+    }
+  - $(npm_dist_tag)
