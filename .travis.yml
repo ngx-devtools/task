@@ -1,0 +1,23 @@
+sudo: required
+
+dist: trusty
+
+addons:
+  chrome: stable
+
+language: node_js
+
+
+node_js:
+  - node
+
+branches:
+  only:
+  - 2.0.0-beta.x
+
+install: 
+  - npm cache clean --force
+  - npm install
+
+script:
+  - npm run test
