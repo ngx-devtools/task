@@ -18,13 +18,30 @@ install:
 script:
   - npm run build
 
-after_success:
-  - | 
+before_deploy: 
+  - |
     function npm_dist_tag() {
       if [[ "$TRAVIS_TAG" = *"-beta.x"* ]]; then
-        echo "next"
+        echo "beta"
       else
         echo "latest"
       fi
     }
-  - $(npm_dist_tag)
+  - npm run bundle && cd dist
+
+deploy:
+  provider: npm
+  email: aelbore.sg@gmail.com
+  skip_cleanup: true
+  tag: $(npm_dist_tag)
+  api_key:
+    secure: $NPM_TOKEN
+  on:
+    all_branches: true
+    tags: true
+    repo: ngx-devtools/task
+
+after_deploy: |
+  if [ "$(npm_dist_tag)" == "beta" ]; then
+    echo "Hey"
+  fi
