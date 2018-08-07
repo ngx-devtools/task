@@ -17,6 +17,7 @@ install:
 
 script:
   - npm run build
+  - echo $TRAVIS_TAG
 
 before_deploy: 
   - |
@@ -28,16 +29,12 @@ before_deploy:
       fi
     }
   - cd dist
-  - |
-    if [ "$(npm_dist_tag)" == "beta" ]; then
-      echo "Hey"
-    fi
 
 deploy:
   provider: npm
   email: aelbore.sg@gmail.com
   skip_cleanup: true
-  tag: beta
+  tag: $(npm_dist_tag)
   api_key:
     secure: $NPM_TOKEN
   on:
