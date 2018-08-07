@@ -39,7 +39,7 @@ deploy:
     secure: $NPM_TOKEN
   on:
     all_branches: true
-    tags: false
+    tags: true
     repo: ngx-devtools/task
 
 notifications:
