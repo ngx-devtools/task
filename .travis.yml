@@ -28,6 +28,10 @@ before_deploy:
       fi
     }
   - cd dist
+  - |
+    if [ "$(npm_dist_tag)" == "beta" ]; then
+      echo "Hey"
+    fi
 
 deploy:
   provider: npm
