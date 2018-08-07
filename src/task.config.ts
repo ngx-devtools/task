@@ -1,7 +1,7 @@
 import { resolve } from 'path';
 
 import { clean, watcher } from '@ngx-devtools/common';
-import { Server } from '@ngx-devtools/server';
+import { DevServer } from '@ngx-devtools/server';
 import { onClientFileChanged, vendorBundle } from '@ngx-devtools/build';
 
 import { build, copyAssets } from './build';
@@ -57,7 +57,7 @@ export class TaskConfig {
 
   default() {
     return Promise.all([ copyAssets(), build()  ]).then(() => {
-      return Promise.all([ Server.start(), watcher({ onClientFileChanged }) ]) 
+      return Promise.all([ DevServer.start(), watcher({ onClientFileChanged }) ]) 
     })
   }
 
