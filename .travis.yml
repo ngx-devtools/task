@@ -41,7 +41,7 @@ deploy:
   api_key:
     secure: $NPM_TOKEN
   on:
-    all_branches: false
+    all_branches: true
     tags: false
     repo: ngx-devtools/task
 
