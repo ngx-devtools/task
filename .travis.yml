@@ -27,7 +27,6 @@ before_deploy:
         echo "latest"
       fi
     }
-  - npm run bundle && cd dist
 
 deploy:
   provider: npm
