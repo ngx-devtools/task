@@ -19,5 +19,5 @@ script:
   - npm run build
 
 after_success:
-  - echo $TRAVIS_TAG
+  - echo "$TRAVIS_TAG"
 
