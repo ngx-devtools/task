@@ -1,7 +1,24 @@
-import { isProcess, copyFileAsync, globFiles, mkdirp, clean, injectHtml } from '@ngx-devtools/common';
-import { buildDevAll, buildDevElements, buildProdElements, buildProdLibs, buildProdApp } from '@ngx-devtools/build';
 import { join, dirname,  } from 'path';
 import { existsSync } from 'fs';
+
+import { 
+  isProcess, 
+  copyFileAsync, 
+  globFiles, 
+  mkdirp, 
+  clean, 
+  injectHtml 
+} from '@ngx-devtools/common';
+
+import { 
+  ngCompileProdApp, 
+  ngCompilePackageLibs,
+  buildDevAll, 
+  buildDevElements, 
+  buildProdElements, 
+  buildProdLibs, 
+  buildProdApp
+} from '@ngx-devtools/build';
 
 const prodModeParams = [ '--prod',  '--prod=true',  '--prod true'  ];
 
@@ -10,6 +27,8 @@ const argv = require('yargs')
   .option('prod-elements', { default: null, type: 'string' })
   .option('prod-libs', { default: null, type: 'string' })
   .option('prod-app', { default: null, type: 'string' })
+  .option('ngc-libs', { default: null, type: 'string' })
+  .option('ngc-app', { default: null, type: 'string' })
   .argv;
 
 const ELEMENTS_PATH = join('src', 'elements');
@@ -26,7 +45,7 @@ async function copyAssets() {
   }));
 }
 
-async function buildTask(){
+async function buildTask() {
   return (argv.prodElements !== null) 
     ? (argv.prodElements)
       ? buildProdElements({ src: ELEMENTS_PATH, packages: argv.prodElements.split('.')  })
@@ -38,7 +57,7 @@ async function buildTask(){
     : buildDevAll()
 }
 
-async function buildProdTaskAll(){
+async function buildProdTaskAll() {
   return Promise.all([ clean('dist'), clean('.tmp') ]).then(() => {
     return Promise.all([ 
       copyAssets().then(() => injectHtml(HTML_PATH)), 
@@ -49,12 +68,18 @@ async function buildProdTaskAll(){
   })
 }
 
-async function buildProdTask(){
+async function buildProdTask() {
   return (argv.elements !== null)
     ? (argv.elements) 
       ? buildProdElements({ src: ELEMENTS_PATH, packages: argv.elements.split('.')  })
       : buildProdElements({ src: ELEMENTS_PATH })
-    : buildProdTaskAll()   
+    : (argv.ngcLibs !== null) 
+      ? (argv.ngcLibs) 
+        ? ngCompilePackageLibs({ src: LIBS_PATH, packages: argv.ngcLibs.split('.') })
+        : ngCompilePackageLibs({ src: LIBS_PATH })
+      : (argv.ngcApp !== null || argv.ngcApp)
+        ? ngCompileProdApp()
+        : buildProdTaskAll()   
 }
 
 async function build() {

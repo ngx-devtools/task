@@ -4,7 +4,6 @@
   "description": "NGX devtools Common task",
   "main": "dist/task.js",
   "scripts": {
-    "postinstall": "npm run build",
     "build": "node build"
   },
   "repository": {
