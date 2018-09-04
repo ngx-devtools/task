@@ -1,6 +1,6 @@
 import { resolve } from 'path';
 
-import { clean, watcher } from '@ngx-devtools/common';
+import { clean, watcher, Devtools } from '@ngx-devtools/common';
 import { DevServer } from '@ngx-devtools/server';
 import { onClientFileChanged, vendorBundle } from '@ngx-devtools/build';
 
@@ -45,6 +45,10 @@ export class TaskConfig {
 
   build() {
     return build();
+  }
+
+  linkModules() {
+    return SymLink.mono(Devtools.config.modules);
   }
 
   vendorBundle() {
