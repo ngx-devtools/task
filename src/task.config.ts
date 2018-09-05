@@ -47,8 +47,12 @@ export class TaskConfig {
     return build();
   }
 
+  unlinkModules() {
+    return SymLink.unlinkModules(Devtools.config.modules);
+  }
+
   linkModules() {
-    return SymLink.mono(Devtools.config.modules);
+    return SymLink.linkModules(Devtools.config.modules);
   }
 
   vendorBundle() {

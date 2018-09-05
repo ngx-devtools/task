@@ -1,7 +1,7 @@
 import { join, dirname } from 'path';
 import { isString } from 'util';
-import { readdirAsync, readFileAsync, mkdirp, symlinkAsync, symlinkDir, clean, unlinkAsync } from '@ngx-devtools/common';
-import { existsSync, statSync, readlinkSync } from 'fs';
+import { readdirAsync, readFileAsync, mkdirp, symlinkAsync, LINK_TYPE, clean, unlinkAsync } from '@ngx-devtools/common';
+import { existsSync, readlinkSync } from 'fs';
 
 export interface ModuleKey {
   libs: string[];
@@ -23,28 +23,48 @@ export default class SymLink {
     }))
   } 
 
-  static async mono(modules: any) {
+  static async linkModules(modules: any) {
     const keys = Object.keys(modules);
     return Promise.all(keys.map(key => {
       const value = <ModuleKey>modules[key];
-      return Promise.all([ SymLink.linkLibs(key, value.libs), SymLink.linkElements(key, value.elements) ])
+      return Promise.all([ 
+        Promise.all(value.libs.map(lib => SymLink.linkMonorepo(key, `libs/${lib}`))), 
+        Promise.all(value.elements.map(element => SymLink.linkMonorepo(key, `elements/${element}`)))
+      ])
     }))
+  }
+
+  static async unlinkModules(modules: any) {
+    const keys = Object.keys(modules);
+    return Promise.all(keys.map(key => {
+      const value = <ModuleKey>modules[key];
+      return Promise.all([ 
+        Promise.all(value.libs.map(lib => SymLink.unlinkMonoModules(key, `libs/${lib}`))),
+        Promise.all(value.elements.map(element => SymLink.unlinkMonoModules(key, `elements/${element}`)))
+      ])
+    }))
+  }
+
+  private static async unlinkMonoModules(key: string, folder: string) {
+    const srcPath = join(process.env.APP_ROOT_PATH, key, 'src', folder);
+    const destPath = join(process.env.APP_ROOT_PATH, 'src', folder);
+    return (existsSync(destPath))
+      ? (readlinkSync(destPath) === srcPath) ? unlinkAsync(destPath): clean(destPath)
+      : Promise.resolve()
   }
 
   private static async linkMonorepo(key: string, folder: string) {
     const srcPath = join(process.env.APP_ROOT_PATH, key, 'src', folder);
     const destPath = join(process.env.APP_ROOT_PATH, 'src', folder);
-    const isWin = (process.platform === 'win32');
-    mkdirp(dirname(destPath));
-    return symlinkAsync(srcPath, destPath, isWin ? 'junction': 'dir')
-  }
-
-  private static linkElements(key: string, elements: string[]) {
-    return Promise.all(elements.map(element => SymLink.linkMonorepo(key, `elements/${element}`)))
-  }
-
-  private static linkLibs(key:string, libs: string[]) {
-    return Promise.all(libs.map(lib => SymLink.linkMonorepo(key, `libs/${lib}`)));
+    async function unlink() {
+      return (existsSync(destPath))
+        ? (readlinkSync(destPath) === srcPath) ? unlinkAsync(destPath): clean(destPath)
+        : Promise.resolve()
+    }
+    return unlink().then(() => {
+      mkdirp(dirname(destPath));
+      return symlinkAsync(srcPath, destPath, (process.platform === 'win32') ? LINK_TYPE.JUNCTION: LINK_TYPE.DIR);
+    })
   }
   
   private static getPkgName(content) {
