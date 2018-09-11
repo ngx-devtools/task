@@ -4,8 +4,8 @@ import { readdirAsync, readFileAsync, mkdirp, symlinkAsync, LINK_TYPE, clean, un
 import { existsSync, readlinkSync } from 'fs';
 
 export interface ModuleKey {
-  libs: string[];
-  elements: string[];
+  libs?: string[];
+  elements?: string[];
 }
 
 export default class SymLink {
@@ -27,9 +27,11 @@ export default class SymLink {
     const keys = Object.keys(modules);
     return Promise.all(keys.map(key => {
       const value = <ModuleKey>modules[key];
+      const libs = value.libs ? value.libs: [];
+      const elements = value.elements ? value.elements: [];
       return Promise.all([ 
-        Promise.all(value.libs.map(lib => SymLink.linkMonorepo(key, `libs/${lib}`))), 
-        Promise.all(value.elements.map(element => SymLink.linkMonorepo(key, `elements/${element}`)))
+        Promise.all(libs.map(lib => SymLink.linkMonorepo(key, `libs/${lib}`))), 
+        Promise.all(elements.map(element => SymLink.linkMonorepo(key, `elements/${element}`)))
       ])
     }))
   }
@@ -38,9 +40,11 @@ export default class SymLink {
     const keys = Object.keys(modules);
     return Promise.all(keys.map(key => {
       const value = <ModuleKey>modules[key];
+      const libs = value.libs ? value.libs: [];
+      const elements = value.elements ? value.elements: [];
       return Promise.all([ 
-        Promise.all(value.libs.map(lib => SymLink.unlinkMonoModules(key, `libs/${lib}`))),
-        Promise.all(value.elements.map(element => SymLink.unlinkMonoModules(key, `elements/${element}`)))
+        Promise.all(libs.map(lib => SymLink.unlinkMonoModules(key, `libs/${lib}`))),
+        Promise.all(elements.map(element => SymLink.unlinkMonoModules(key, `elements/${element}`)))
       ])
     }))
   }
@@ -82,4 +86,3 @@ export default class SymLink {
   }
 
 }
-
