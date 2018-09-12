@@ -1,6 +1,10 @@
 import { join, dirname,  } from 'path';
 import { existsSync } from 'fs';
 
+import { Devtools } from '@ngx-devtools/common';
+import { bundleProdElements } from './build-prod-elements';
+import { bundleProdLibs } from './build-prod-libs';
+
 import { 
   isProcess, 
   copyFileAsync, 
@@ -14,7 +18,6 @@ import {
   ngCompileProdApp, 
   ngCompilePackageLibs,
   buildDevAll, 
-  buildDevElements, 
   buildProdElements, 
   buildProdLibs, 
   buildProdApp
@@ -29,6 +32,7 @@ const argv = require('yargs')
   .option('prod-app', { default: null, type: 'string' })
   .option('ngc-libs', { default: null, type: 'string' })
   .option('ngc-app', { default: null, type: 'string' })
+  .option('config', { default: null, type: 'string' })
   .argv;
 
 const ELEMENTS_PATH = join('src', 'elements');
@@ -47,21 +51,15 @@ async function copyAssets() {
 
 async function buildTask() {
   return (argv.prodElements !== null) 
-    ? (argv.prodElements)
-      ? buildProdElements({ src: ELEMENTS_PATH, packages: argv.prodElements.split('.')  })
-      : buildProdElements({ src: ELEMENTS_PATH })
-    : (argv.elements !== null)
-      ? (argv.elements) 
-        ? buildDevElements({ src: ELEMENTS_PATH, packages: argv.elements.split('.')  })
-        : buildDevElements({ src: ELEMENTS_PATH })
-    : buildDevAll()
+    ? bundleProdElements(argv)
+    : (argv.prodLibs !== null) ? bundleProdLibs(argv): buildDevAll()
 }
 
 async function buildProdTaskAll() {
   return Promise.all([ clean('dist'), clean('.tmp') ]).then(() => {
     return Promise.all([ 
       copyAssets().then(() => injectHtml(HTML_PATH)), 
-      buildProdLibs(LIBS_PATH),
+      buildProdLibs({ src: LIBS_PATH }),
       buildProdApp(),
       buildProdElements({ src: ELEMENTS_PATH })
     ]);
