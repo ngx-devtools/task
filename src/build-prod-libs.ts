@@ -1,7 +1,7 @@
 import { join } from 'path';
 
 import { Devtools } from '@ngx-devtools/common';
-import { buildProdLibs } from '@ngx-devtools/build';
+import { buildProdLibs, ngCompilePackageLibs } from '@ngx-devtools/build';
 
 const LIBS_PATH = join('src', 'libs');
 
@@ -19,4 +19,12 @@ async function bundleProdLibs({ prodLibs, config }) {
     : Promise.resolve()
 }
 
-export { bundleProdLibs }
+async function bundleProdLibsTask({ ngcLibs }) {
+  return (ngcLibs !== null) 
+    ? (ngcLibs) 
+      ? ngCompilePackageLibs({ src: LIBS_PATH, packages: ngcLibs.split('.') })
+      : ngCompilePackageLibs({ src: LIBS_PATH })
+    : Promise.resolve()
+}
+
+export { bundleProdLibs, bundleProdLibsTask }

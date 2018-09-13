@@ -17,8 +17,8 @@
   },
   "homepage": "https://github.com/ngx-devtools/task#readme",
   "dependencies": {
-    "@ngx-devtools/build": "2.0.0-beta.14",
-    "@ngx-devtools/server": "2.0.0-beta.14",
+    "@ngx-devtools/build": "2.0.0-beta.15",
+    "@ngx-devtools/server": "2.0.0-beta.15",
     "@types/gulp": "4.0.5",
     "@types/systemjs": "0.20.6",
     "gulp": "4.0.0"

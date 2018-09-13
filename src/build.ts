@@ -1,9 +1,9 @@
 import { join, dirname,  } from 'path';
 import { existsSync } from 'fs';
 
-import { Devtools } from '@ngx-devtools/common';
-import { bundleProdElements } from './build-prod-elements';
-import { bundleProdLibs } from './build-prod-libs';
+import { bundleProdElements, bundleProdElementsTask } from './build-prod-elements';
+import { bundleProdLibs, bundleProdLibsTask } from './build-prod-libs';
+import { bundleProdComponents } from './build-prod-config';
 
 import { 
   isProcess, 
@@ -11,16 +11,15 @@ import {
   globFiles, 
   mkdirp, 
   clean, 
-  injectHtml 
+  injectHtml
 } from '@ngx-devtools/common';
 
 import { 
   ngCompileProdApp, 
-  ngCompilePackageLibs,
   buildDevAll, 
   buildProdElements, 
   buildProdLibs, 
-  buildProdApp
+  buildProdApp,
 } from '@ngx-devtools/build';
 
 const prodModeParams = [ '--prod',  '--prod=true',  '--prod true'  ];
@@ -33,6 +32,7 @@ const argv = require('yargs')
   .option('ngc-libs', { default: null, type: 'string' })
   .option('ngc-app', { default: null, type: 'string' })
   .option('config', { default: null, type: 'string' })
+  .option('styles', { default: null, type: 'string' })
   .argv;
 
 const ELEMENTS_PATH = join('src', 'elements');
@@ -67,17 +67,17 @@ async function buildProdTaskAll() {
 }
 
 async function buildProdTask() {
-  return (argv.elements !== null)
-    ? (argv.elements) 
-      ? buildProdElements({ src: ELEMENTS_PATH, packages: argv.elements.split('.')  })
-      : buildProdElements({ src: ELEMENTS_PATH })
-    : (argv.ngcLibs !== null) 
-      ? (argv.ngcLibs) 
-        ? ngCompilePackageLibs({ src: LIBS_PATH, packages: argv.ngcLibs.split('.') })
-        : ngCompilePackageLibs({ src: LIBS_PATH })
-      : (argv.ngcApp !== null || argv.ngcApp)
-        ? ngCompileProdApp()
-        : buildProdTaskAll()   
+  if (argv.elements !== null) {
+    await bundleProdElementsTask(argv)
+  } else if (argv.ngcLibs !== null) {
+    await bundleProdLibsTask(argv)
+  } else if (argv.ngcApp !== null || argv.ngcApp) {
+    await ngCompileProdApp();
+  } else if (argv.config !== null || argv.config) {
+    await bundleProdComponents(argv);
+  } else {
+    await buildProdTaskAll()
+  }
 }
 
 async function build() {

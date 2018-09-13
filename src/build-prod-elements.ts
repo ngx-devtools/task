@@ -15,4 +15,12 @@ async function bundleProdElements({ prodElements, elements }) {
     : Promise.resolve()
 }
 
-export { bundleProdElements }
+async function bundleProdElementsTask({ elements }) {
+  return (elements !== null)
+    ? (elements) 
+      ? buildProdElements({ src: ELEMENTS_PATH, packages: elements.split('.')  })
+      : buildProdElements({ src: ELEMENTS_PATH })
+    : Promise.resolve();
+}
+
+export { bundleProdElements, bundleProdElementsTask }
