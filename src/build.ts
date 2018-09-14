@@ -32,7 +32,7 @@ const argv = require('yargs')
   .option('ngc-libs', { default: null, type: 'string' })
   .option('ngc-app', { default: null, type: 'string' })
   .option('config', { default: null, type: 'string' })
-  .option('styles', { default: null, type: 'string' })
+  .option('assets', { default: null, type: 'string' })
   .argv;
 
 const ELEMENTS_PATH = join('src', 'elements');
